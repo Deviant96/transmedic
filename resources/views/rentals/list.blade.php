@@ -9,9 +9,15 @@
         <ul class="list-group">
             @foreach ($rentals as $rental)
             <li class="list-group-item">
-                <p>{{ $rental->car->brand }} {{ $rental->car->model }} ({{ $rental->car->plate_number }})</p>
-                <small>Dari {{ $rental->date_start }} ke {{ $rental->date_end }}</small>
-                <p>{{ $rental->returned ? 'Sudah dikembalikan' : 'Belum dikembalikan' }}</p>
+                <h4>{{ $rental->car->brand }} {{ $rental->car->model }} ({{ $rental->car->plate_number }})</h4>
+                <small class="text-muted">Dari {{ $rental->date_start_formatted }} ke {{ $rental->date_end_formatted }} ({{ $rental->diffindays + 1 }} hari)</small>
+                <div>
+                @if( $rental->returned )
+                    <span class="badge text-bg-success">Sudah dikembalikan</span>
+                @else
+                    <span class="badge text-bg-warning">Belum dikembalikan</span>
+                @endif
+                </div>
             </li>
             @endforeach
         </ul>

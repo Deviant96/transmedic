@@ -27,7 +27,7 @@
                             <label for="price_per_day">Harga per hari</label>
                             <input type="number" id="price_per_day" name="price_per_day" step="0.01" class="form-control" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Tambah</button>
+                        <button type="submit" class="btn btn-primary mt-4">Tambah</button>
                     </form>
                 </div>
             </div>

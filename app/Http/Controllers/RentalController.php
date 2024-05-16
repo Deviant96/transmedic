@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Rental;
 use App\Models\Car;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class RentalController extends Controller
 {
@@ -26,7 +27,7 @@ class RentalController extends Controller
         $car = Car::find($validated['car_id']);
 
         if (!$car->available) {
-            return response()->json(['message' => 'Car not available'], 400);
+            return back()->withErrors(['error' => 'Mobil tidak tersedia.']);
         }
 
         $rental = Rental::create([
@@ -39,20 +40,20 @@ class RentalController extends Controller
         $car->available = false;
         $car->save();
 
-        // return response()->json(['message' => 'Car rented successfully']);
-        return redirect()->route('rental.rent.form')->with('message', 'Car rented successfully.');
-    }
-
-    public function listRentedCars()
-    {
-        $rentals = Rental::where('user_id', session('user_id'))->with('car')->get();
-        // return response()->json($rentals);
-        return view('rentals.list', compact('rentals'));
+        return redirect()->route('rental.rent.form')->with('message', 'Mobil berhasil disewa.');
     }
 
     public function listUserRentals()
     {
-        $rentals = Rental::where('user_id', session('user_id'))->with('car')->get();
+        $rentals = Rental::where('user_id', session('user_id'))->with('car')->orderBy('created_at', 'desc')->get();
+        $rentals->transform(function ($rental) {
+            $diffInDays = Carbon::parse($rental->date_end)->diffInDays(Carbon::parse($rental->date_start));
+            $rental->diffindays = abs($diffInDays);
+
+            $rental->date_start_formatted = Carbon::parse($rental->date_start)->locale('id-ID')->translatedFormat('l, d F Y');
+            $rental->date_end_formatted = Carbon::parse($rental->date_end)->locale('id-ID')->translatedFormat('l, d F Y');
+            return $rental;
+        });
         return view('rentals.list', compact('rentals'));
     }
 
@@ -79,9 +80,7 @@ class RentalController extends Controller
         $rental = Rental::where('car_id', $car->id)->where('user_id', session('user_id'))->where('returned', false)->first();
 
         if (!$rental) {
-            // return response()->json(['message' => 'Car not rented by user'], 400);
-
-            return back()->withErrors(['error' => 'Car is not rented by you or already returned.']);
+            return back()->withErrors(['error' => 'Mobil tidak disewa oleh Anda atau sudah dikembalikan.']);
         }
 
         $rental->returned = true;
@@ -93,7 +92,6 @@ class RentalController extends Controller
         $daysRented = $rental->date_end->diffInDays($rental->date_start);
         $totalPrice = $daysRented * $car->price_per_day;
 
-        // return response()->json(['message' => 'Car returned successfully', 'total_price' => $totalPrice]);
-        return redirect()->route('rental.return.form')->with('message', "Car returned successfully. Total rent cost: $$totalPrice");
+        return redirect()->route('rental.return.form')->with('message', "Mobil sukses dikembalikan. Total biaya sewa: Rp" . number_format($car->price_per_day, 2, ",", "."));
     }
 }

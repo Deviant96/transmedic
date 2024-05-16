@@ -34,9 +34,9 @@
         <div class="col-md-9">
             <div class="bg-white p-6 rounded shadow-md">
                 @if(isset($cars) && (request()->has('brand') || request()->has('model') || request()->has('available')))
-                <h2 class="text-2xl mb-4">Hasil pencarian</h2>
-                <a href="/list-cars">Kembali ke daftar</a>
-                <ul class="list-group">
+                <h2 class="text-2xl mb-2">Hasil pencarian</h2>
+                <a href="/list-cars" class="small">Kembali ke daftar</a>
+                <ul class="list-group mt-4">
                     @forelse ($cars as $car)
                     <li class="list-group-item">
                         {{ $car->brand }} {{ $car->model }} - {{ $car->plate_number }} - Rp{{ number_format($car->price_per_day, 2, ",", ".") }}/hari - {{ $car->available ? 'Tersedia' : 'Tidak tersedia' }}

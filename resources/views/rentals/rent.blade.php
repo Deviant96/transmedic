@@ -14,7 +14,8 @@
                         <div class="row">
                             @foreach ($cars as $car)
                             <div class="col-md-4 mb-4">
-                                <div class="card">
+                                <label class="form-check-label" for="car_{{ $car->id }}">
+                                <div class="card" style="cursor: pointer">
                                     @if ($car->image_url)
                                     <img src="{{ $car->image_url }}" class="card-img-top" alt="{{ $car->brand }} {{ $car->model }}">
                                     @else
@@ -23,12 +24,11 @@
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $car->brand }} {{ $car->model }}</h5>
                                         <p class="card-text">Rp{{ number_format($car->price_per_day, 2, ",", ".") }}/hari</p>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="car_id" id="car_{{ $car->id }}" value="{{ $car->id }}" required>
-                                            <label class="form-check-label" for="car_{{ $car->id }}">Pilih</label>
-                                        </div>
+                                        <input class="card-radio-input" type="radio" name="car_id" id="car_{{ $car->id }}" value="{{ $car->id }}" required>
+                                        <span>Pilih</span>
                                     </div>
                                 </div>
+                            </label>
                             </div>
                             @endforeach
                         </div>

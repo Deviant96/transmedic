@@ -34,7 +34,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('login.form')->with('message', 'Registration successful. Please login.');
+        return redirect()->route('login.form')->with('message', 'Pendaftaran sukses. Silahkan login kembali.');
     }
 
     public function showLoginForm()
@@ -58,7 +58,7 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Akun tidak ditemukan.',
         ]);
     }
 
@@ -68,6 +68,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login.form')->with('message', 'Logged out successfully.');
+        return redirect()->route('login.form')->with('message', 'Sukses logout.');
     }
 }

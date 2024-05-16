@@ -23,12 +23,7 @@ class CarController extends Controller
 
         Car::create($request->all());
 
-        return redirect()->route('car.add.form')->with('message', 'Car added successfully.');
-    }
-
-    public function showSearchCarsForm()
-    {
-        return view('cars.search');
+        return redirect()->route('car.add.form')->with('message', 'Mobil berhasil ditambahkan.');
     }
 
     public function listCars(Request $request)
